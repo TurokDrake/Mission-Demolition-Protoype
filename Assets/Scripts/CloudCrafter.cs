@@ -4,16 +4,22 @@ using UnityEngine;
 
 public class CloudCrafter : MonoBehaviour
 {
-    public int numClouds = 40; // Number of cloud.
-    public GameObject[] cloudPrefabs;
-    public Vector3 cloudPosMin;
-    public Vector3 cloudPosMax;
+    public int numClouds = 40; // 云的数量
+    public GameObject[] cloudPrefabs; // 云预制体
+
+    // 限制云出现的范围
+    public Vector3 cloudPosMin; 
+    public Vector3 cloudPosMax; 
+
+    // 限制云缩放范围
     public float cloudScaleMin = 1f;
     public float cloudScaleMax = 5f;
-    public float cloudSpeedMult = 0.5f;
-    public bool __________;
+    
+    public float cloudSpeedMult = 0.5f; // 云移动速度
 
-    public GameObject[] cloudInstances;
+    public bool __________; // 分隔符
+
+    public GameObject[] cloudInstances; // 实例化到场景的云
 
     private void Awake()
     {
@@ -22,21 +28,22 @@ public class CloudCrafter : MonoBehaviour
         GameObject cloud;
         for(int i = 0; i < numClouds; i++)
         {
-            // Instantiate cloud randomly.
+            // 随机实例化不同形状的云
             int prefabNum = Random.Range(0, cloudPrefabs.Length);
             cloud = Instantiate<GameObject>(cloudPrefabs[prefabNum]);
 
-            // Set position of cloud.
+            // 设置云的位置
             Vector3 cPos = Vector3.zero;
             cPos.x = Random.Range(cloudPosMin.x, cloudPosMax.x);
             cPos.y = Random.Range(cloudPosMin.y, cloudPosMax.y);
 
-            // Set scale of cloud.
-            float scaleU = Random.value;
+            // 让云的大小动态变化
+            float scaleU = Random.value; // 返回从0~1的浮点数
             float scaleVal = Mathf.Lerp(cloudScaleMin, cloudScaleMax, scaleU);
 
             // 较小的云朵离地面近
             cPos.y = Mathf.Lerp(cloudPosMin.y, cPos.y, scaleU);
+
             // 较大的云朵离地面远
             cPos.z = 100 - 90 * scaleU;
 
@@ -51,6 +58,7 @@ public class CloudCrafter : MonoBehaviour
 
     private void Update()
     {
+        // 每一帧检测云的位置，让云动起来
         foreach (GameObject cloud in cloudInstances)
         {
             float scaleVal = cloud.transform.localScale.x;
@@ -64,7 +72,7 @@ public class CloudCrafter : MonoBehaviour
                 cPos.x = cloudPosMax.x;
             }
 
-            // Update cloud's position.
+            // 更新云的位置
             cloud.transform.position = cPos;
         }
     }
